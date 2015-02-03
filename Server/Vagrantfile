@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "dev", primary: true do |web|
+    # set the base image
+    web.vm.box = "ubuntu/trusty64"
+
+    # setup python to hit mysql
+    web.vm.provision :shell, path: "up/python.sh"
+
+    # install cron jobs and dependencies
+    web.vm.provision :shell, path: "up/updatecron.sh"
+
+
+    # setup port forward from localhost 4567 to VM 80
+    web.vm.network :public_network, ip: "192.168.1.102"
+
+    web.vm.synced_folder "cron", "/rootwormindex/cron", :create=>true, :owner=> 'vagrant', :group=>'vagrant', :mount_options => ['dmode=775', 'fmode=775']
+
+  end
+
+  config.vm.define "staging", autostart: false do |staging|
+    # set the base image
+    staging.vm.box = "ubuntu/trusty64"
+
+#    staging.vm.provider :aws do |aws, override|
+#        aws.access_key_id = "YOUR KEY"
+#        aws.secret_access_key = "YOUR SECRET KEY"
+#        aws.keypair_name = "KEYPAIR NAME"
+#
+#        aws.ami = "ami-7747d01e"
+#
+#        override.ssh.username = "ubuntu"
+#        override.ssh.private_key_path = "PATH TO YOUR PRIVATE KEY"
+#    end
+
+    # setup python to hit mysql
+    staging.vm.provision :shell, path: "up/python.sh"
+
+    # install cron jobs and dependencies
+    staging.vm.provision :shell, path: "up/updatecron.sh"
+
+
+    # setup port forward from localhost 4567 to VM 80
+    staging.vm.network :public_network, ip: "192.168.1.109"
+    staging.vm.network :forwarded_port, host: 4567, guest: 80
+
+
+    staging.vm.synced_folder "cron", "/rootwormindex/cron", :create=>true, :owner=> 'vagrant', :group=>'vagrant', :mount_options => ['dmode=775', 'fmode=775']
+
+  end
+  
+
+end
