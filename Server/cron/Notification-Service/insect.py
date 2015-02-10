@@ -2,7 +2,9 @@ __author__ = 'mikba'
 from collections import deque
 from io import  BytesIO
 import pycurl
+import json
 
+import urbanairship as ua
 from libs.settings import *
 
 ##############################################################
@@ -31,14 +33,14 @@ for report in insectDictRaw["posts"]:
 
 
 for key in insectDict:
-	print key
-
-	if key == "rootworm":
-		msg = "There is a {} Risk Alert for {}\n".format(insectDict[key], key)
+	if key == "Corn Rootworm":
+		#if insectDict["key"] != "No Risk":
+		msg = "Today's risk for Corn Rootworm is: {}".format(insectDict[key])
 		print msg
 	
-# push = airship.create_push()
-# push.audience = ua.all_
-# push.notification = ua.notification(alert="Hello, world!")
-# push.device_types = ua.all_
-# push.send()
+		airship = ua.Airship(AIRSHIPKEY, AIRSHIPSEC)
+		push = airship.create_push()
+		push.audience = ua.all_
+		push.notification = ua.notification(alert=msg)
+		push.device_types = ua.all_
+		push.send()
