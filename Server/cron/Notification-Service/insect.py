@@ -34,7 +34,7 @@ for report in insectDictRaw["posts"]:
 
 for key in insectDict:
 	if key == "Corn Rootworm":
-		#if insectDict["key"] != "No Risk":
+		if insectDict["key"] != "No Risk":
 		msg = "Today's risk for Corn Rootworm is: {}".format(insectDict[key])
 		print msg
 	
