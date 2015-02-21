@@ -16,7 +16,7 @@ crontab -l > mycron
 
 echo "0 8 * * 1-5 python /agindex/cron/AgIndex-Notification-Service/insect.py >> /var/log/pushnotifications/insect.log 2>&1" >> mycron
 echo "0 0 * * * rm /var/log/pushnotifications/*" >> mycron
-echo "*/15 * * * 1-5 python /agindex/cron/AgIndex-Notification-Service/sendToAirship.py >> /var/log/pushnotifications/sendToAirship.log 2>&1" >> mycron
+echo "*/5 * * * 1-5 python /agindex/cron/AgIndex-Notification-Service/test_message.py >> /var/log/pushnotifications/test.log 2>&1" >> mycron
 
 #install new cron file
 crontab mycron

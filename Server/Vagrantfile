@@ -10,6 +10,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # set the base image
     web.vm.box = "ubuntu/trusty64"
 
+    # install apache, rm /var/www, symlink /vagrant to /var/www
+    web.vm.provision :shell, path: "up/apache.sh"
+    
     # setup python to hit mysql
     web.vm.provision :shell, path: "up/python.sh"
 
@@ -19,6 +22,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # setup port forward from localhost 4567 to VM 80
     web.vm.network :public_network, ip: "192.168.1.102"
+    web.vm.network :forwarded_port, host: 4567, guest: 80
+
+    web.vm.synced_folder "www", "/var/www/html", :owner=> 'www-data', :group=>'www-data', :mount_options => ['dmode=775', 'fmode=775']
 
     web.vm.synced_folder "cron", "/rootwormindex/cron", :create=>true, :owner=> 'vagrant', :group=>'vagrant', :mount_options => ['dmode=775', 'fmode=775']
 
