@@ -4,8 +4,10 @@ from libs.settings import *
 
 import os.path
 
-#if os.path.isfile("/var/www/web/content/GRMTest/pending_message"):
-if os.path.isfile("/var/www/html/GRMTest/pending_message"):
+filepath = "/var/www/web/content/GRMTest/pending_message"
+#filepath = "/var/www/html/GRMTest/pending_message"
+
+if os.path.isfile(filepath):
 	print "sending test message"
 	airship = ua.Airship(AIRSHIPKEY, AIRSHIPSEC)
 	push = airship.create_push()
